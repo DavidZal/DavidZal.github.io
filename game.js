@@ -20,7 +20,7 @@ var game = {
             }
         };
         this.inGame = true;
-        this.gold = 1000000;
+        this.gold = 2000;
         this.player = unit.createUnit(unit.types.chauncey, this.map.center);
 
         this.canvasElm = document.getElementById('mapcanvas');
