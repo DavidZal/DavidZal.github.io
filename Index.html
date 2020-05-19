@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>the horde</title>
+
+    <style>
+        body { text-align: center; }
+        canvas { border: solid; position: absolute; top: 0; left: 0; }
+        .game { width: 1700px; height: 900px; position: relative; }
+    </style>
+</head>
+<body>
+    <div class="game">
+        <canvas id="canvas" width="1700" height="900"></canvas>
+        <canvas id="mapcanvas" width="1700" height="900"></canvas>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="town/town.js"></script>
+    <script src="town/landNode.js"></script>
+    <script src="unit/unit.js"></script>
+    <script src="unit/hordeling.js"></script>
+    <script src="unit/attackableTarget.js"></script>
+    <script src="unit/knight.js"></script>
+    <script src="unit/catapult.js"></script>
+    <script src="unit/archer.js"></script>
+    <script src="unit/fireball.js"></script>
+    <script src="unit/unitGroup.js"></script>
+    <script src="unit/shaman.js"></script>
+    <script src="unit/shamanFireball.js"></script>
+    <script src="astar.js"></script>
+    <script src="game.js"></script>
+    <script src="canvas.js"></script>
+</body>
+</html>

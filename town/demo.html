@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+    <meta charset="utf-8" />
+    <title>town</title>
+
+    <style>
+        .map { border: solid; float: right; }
+        .tile { width: 5px; height: 5px; display: inline-block; float: right; }
+        .grass { background: green; }
+        .water { background: blue; }
+        .road { background: #B2B200; }
+        .house {background: brown}
+        .field { background: lightgreen; }
+    </style>
+</head>
+
+<body>
+    <button id="generate">generate</button>
+    <div id="map" class="map">
+
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="landNode.js"></script>
+    <script src="town.js"></script>
+    <script>
+        var land;
+        $('#generate').click(function () {
+
+            if (!land) {
+                land = new map(200, 10);
+                this.phase = 0;
+                $(this).text('next phase');
+            } else {
+                this.phase++;
+                console.log('phase ',this.phase);
+                land.newPhase();
+            }
+
+            drawLand(land);
+        });
+
+
+        function drawLand(land) {
+            var $map = $('#map');
+
+            $map.css('width', land.fullSize * 5 + 'px');
+            $map.empty();
+            for (var i = 0; i < land.fullSize; i++) {
+                for (var j = 0; j < land.fullSize; j++) {
+                    var node = land.grid[j][i];
+
+                    $map.append($('<div>', {
+                        'class': 'tile ' + node.type,
+                        id: node.createId(),
+                    }));
+                }
+            }
+        }
+
+    </script>
+
+</body>
+</html>
