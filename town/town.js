@@ -1,4 +1,3 @@
-
 function map() {
     if (arguments.length) {
         return this.generate.apply(this, arguments);
@@ -151,11 +150,11 @@ map.prototype.newPhase = function () {
 
     theMap.data = theMap.getNodesByType();
 
-    //upgrade houses to mill 1 /10 ratio
+    //upgrade houses to mill 2 /10 ratio
     var houseCount = theMap.data.house.length;
     var millCount = theMap.data.mill.length;
 
-    var newMills = Math.floor(0.1 * houseCount) - millCount;
+    var newMills = Math.floor(0.2 * houseCount) - millCount;
 
     if (newMills > 0) {
         theMap.data.house
@@ -165,16 +164,16 @@ map.prototype.newPhase = function () {
             .forEach(function (h) { h.house.type = landNode.types.mill; });
     }
 
-    //upgrade old mills to castles 1 / 6.67 ratio
-    var newCastles = Math.floor(0.15 * (millCount + newMills)) - theMap.data.castle.length;
+    //upgrade houses to castles 
+    var newCastles = Math.floor(0.1 * houseCount) - theMap.data.castle.length;
     if (newCastles > 0) {
         theMap.data = theMap.getNodesByType();
 
-        theMap.data.mill
-            .map(function (m) { return { mill: m, score: m.distFromNode(theMap.center) }; })
+        theMap.data.house
+            .map(function (m) { return { house: m, score: m.distFromNode(theMap.center) }; })
             .sort(function (h1, h2) { return h2.score - h1.score; })
             .slice(0, newCastles)
-            .forEach(function (h) { h.mill.type = landNode.types.castle; });
+            .forEach(function (h) { h.house.type = landNode.types.castle; });
     }
 
     //add 1 field next to each structure
