@@ -1,4 +1,4 @@
-import { SAVE_KEY, SAVE_VERSION } from '../config/constants.js';
+import { SAVE_KEY, SAVE_VERSION, UnitType } from '../config/constants.js';
 import { Map } from '../map/Map.js';
 import { createUnit } from '../units/createUnit.js';
 
@@ -10,7 +10,9 @@ export class SaveManager {
       gold: game.gold,
       life: game.player.life,
       round: game.phase.round,
-      units: game.units.alive().map((u) => ({
+      units: game.units.alive()
+        .filter((u) => u.type !== UnitType.patrolGuard)
+        .map((u) => ({
         type: u.type,
         node: { x: u.position.node.x, y: u.position.node.y },
         offset: { x: u.position.offset.x, y: u.position.offset.y },

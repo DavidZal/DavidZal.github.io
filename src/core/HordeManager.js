@@ -4,6 +4,7 @@ import { astar } from '../pathfinding/astar.js';
 import { AttackableTarget } from '../units/AttackableTarget.js';
 import { createHordeling } from '../units/createUnit.js';
 import { UnitGroup } from '../units/UnitGroup.js';
+import { spawnPatrolGuards } from './PatrolGuardManager.js';
 
 export class HordeManager {
   constructor() {
@@ -13,17 +14,30 @@ export class HordeManager {
     this.targets = [];
   }
 
+  static roundStrengthGain(round) {
+    return (
+      1 +
+      Math.floor(round * 0.75) +
+      Math.floor(round / 5) * 5 +
+      Math.floor(round / 20) * 100
+    );
+  }
+
+  static calcStrengthAfterRound(round) {
+    let strength = 2;
+    for (let r = 1; r <= round; r++) {
+      strength += HordeManager.roundStrengthGain(r);
+    }
+    return strength;
+  }
+
   initBattlePhase() {
     const game = getGame();
     this.hordelings = [];
     this.inactiveHordelings = [];
     this.targets = [];
 
-    this.hordeStrength +=
-      1 +
-      Math.floor(game.phase.round * 0.75) +
-      Math.floor(game.phase.round / 5) * 5 +
-      Math.floor(game.phase.round / 20) * 100;
+    this.hordeStrength += HordeManager.roundStrengthGain(game.phase.round);
 
     let hCounter = this.hordeStrength;
     const min = Math.ceil((game.map.fullSize - game.map.size) / 2);
@@ -71,6 +85,8 @@ export class HordeManager {
     });
 
     game.resetStartPos();
+
+    spawnPatrolGuards(game);
 
     game.units.alive().forEach((u) => {
       this.targets.push(u);

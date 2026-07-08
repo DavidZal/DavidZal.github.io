@@ -1,6 +1,7 @@
 import { LandType, Phase, UnitAction } from '../config/constants.js';
 import { BUILD_OPTIONS } from '../config/constants.js';
 import { createUnit } from '../units/createUnit.js';
+import { CheatManager } from '../core/CheatManager.js';
 
 export class InputManager {
   constructor(canvas, renderer) {
@@ -9,6 +10,7 @@ export class InputManager {
     this.game = null;
     this._pendingHover = null;
     this._hoverRaf = null;
+    this._cheats = new CheatManager();
   }
 
   attach(game) {
@@ -71,6 +73,15 @@ export class InputManager {
     if (!game?.inGame) return;
 
     const key = e.key.toLowerCase();
+
+    if (
+      game.phase.current !== Phase.Start &&
+      this._cheats.handleKey(key, game)
+    ) {
+      e.preventDefault();
+      return;
+    }
+
     const grid = game.map.grid;
     const node = game.player.position.node;
 

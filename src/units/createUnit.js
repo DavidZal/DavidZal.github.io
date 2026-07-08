@@ -6,6 +6,7 @@ import { Fireball } from './Fireball.js';
 import { Hordeling } from './Hordeling.js';
 import { Knight } from './Knight.js';
 import { Shaman } from './Shaman.js';
+import { PatrolGuard } from './PatrolGuard.js';
 import { Unit } from './Unit.js';
 
 export class UnitRegistry {
@@ -68,6 +69,8 @@ export function createUnit(type, node, offset) {
       return new Hordeling(type, node, offset);
     case UnitType.hordeling4:
       return new Shaman(node);
+    case UnitType.patrolGuard:
+      return new PatrolGuard(type, node, offset);
     default:
       return new Unit(type, node, offset);
   }

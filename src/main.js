@@ -26,6 +26,8 @@ game.init(renderer, input, ui).then(() => {
   game.events.on('phase:changed', () => ui._updateBuildUI());
 
   setInterval(() => {
-    if (game.phase.current === Phase.Build) ui._updateBuildUI();
+    if (game.phase.current === Phase.Build) {
+      ui._updateBuildUI({ rebuildOptions: false });
+    }
   }, 200);
 });

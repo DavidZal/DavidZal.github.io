@@ -1,4 +1,4 @@
-import { LandType } from '../config/constants.js';
+import { LandType, MAP_GROWTH_PER_ROUND, MAP_INITIAL_VISIBLE } from '../config/constants.js';
 import { LandNode } from './LandNode.js';
 import { getGame } from '../core/GameContext.js';
 
@@ -25,7 +25,7 @@ export class Map {
         this.nodes.push(node);
       }
     }
-    this.setVisible(24);
+    this.setVisible(MAP_INITIAL_VISIBLE);
 
     const potentialWaterNodes = this.nodes.filter((node) => {
       const q = this.fullSize / 3;
@@ -42,7 +42,7 @@ export class Map {
     const waterNodeSpawners = [];
     while (waterNodeSpawners.length < waters) {
       const node = potentialWaterNodes[Math.floor(Math.random() * potentialWaterNodes.length)];
-      if (waterNodeSpawners.every((n) => node.distFromNode(n) > 8)) {
+      if (waterNodeSpawners.every((n) => node.distFromNode(n) > Math.floor(this.fullSize / 12))) {
         waterNodeSpawners.push(node);
         node.type = LandType.water;
       }
@@ -102,7 +102,7 @@ export class Map {
     const theMap = this;
     const round = getGame().phase.round;
 
-    theMap.size += 5;
+    theMap.size += MAP_GROWTH_PER_ROUND;
     theMap.size = theMap.size > theMap.fullSize ? theMap.fullSize : theMap.size;
     theMap.setVisible(theMap.size);
     theMap.data = theMap.getNodesByType();

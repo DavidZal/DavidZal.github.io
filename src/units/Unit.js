@@ -165,7 +165,8 @@ export class Unit {
     switch (this.action) {
       case UnitAction.nothing:
         switch (this.type) {
-          case UnitType.guard: {
+          case UnitType.guard:
+          case UnitType.patrolGuard: {
             let target = this.getHordelingWithinRange();
             if (target) {
               this.target = target;
@@ -287,7 +288,8 @@ export class Unit {
           this.animate.sy = this.animate.source.attack.sy;
         }
         break;
-      case UnitType.guard: {
+      case UnitType.guard:
+      case UnitType.patrolGuard: {
         this.frame = ++this.frame > 3 ? 0 : this.frame;
         this.animate.sy = this.animate.source.attack.sy;
         this.animate.sx = this.frame * this.sWidth;

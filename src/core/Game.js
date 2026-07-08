@@ -16,6 +16,7 @@ import { setGame } from './GameContext.js';
 import { AssetLoader } from './AssetLoader.js';
 import { HordeManager } from './HordeManager.js';
 import { calcGold } from './GoldCalculator.js';
+import { clearPatrolGuards } from './PatrolGuardManager.js';
 import { SaveManager } from './SaveManager.js';
 import { Map } from '../map/Map.js';
 import { LandNode } from '../map/LandNode.js';
@@ -111,6 +112,7 @@ export class Game {
   }
 
   initBuildPhase() {
+    clearPatrolGuards(this);
     this.units.all = this.units.alive();
     this.horde.targets.forEach((t) => t.restoreStart?.());
     this.phase.round++;
@@ -130,6 +132,7 @@ export class Game {
   }
 
   endBattlePhase() {
+    clearPatrolGuards(this);
     this.setPhase(Phase.BattleEnd);
     this.player.target = null;
     this.player.walkTo = {};
@@ -150,6 +153,39 @@ export class Game {
   saveGame() {
     SaveManager.save(this);
     this._ui.showToast('Game saved!');
+  }
+
+  cheatAddGold(amount = 10000) {
+    this.gold += amount;
+    this.events.emit('gold:changed', { gold: this.gold, change: amount });
+    this._ui.showToast(`Cheat: +${amount.toLocaleString()} gold`);
+  }
+
+  cheatJumpToRound(targetRound) {
+    const target = Math.max(1, Math.min(99, Math.floor(targetRound)));
+
+    if (this.phase.round < target) {
+      while (this.phase.round < target) {
+        this.phase.round++;
+        this.map.newPhase();
+      }
+    } else {
+      this.phase.round = target;
+    }
+
+    this.phase.nextCount = 100 + this.phase.round * 10;
+    this.units.all = this.units.alive();
+    this.horde.hordeStrength = HordeManager.calcStrengthAfterRound(target);
+    this.horde.hordelings = [];
+    this.horde.targets = [];
+    this.horde.inactiveHordelings = [];
+    this.selectedBuildOption = null;
+    this.player.target = null;
+    this.player.walkTo = {};
+    this.resetStartPos();
+    this.setPhase(Phase.Build);
+    this._ui._updateBuildUI();
+    this._ui.showToast(`Cheat: jumped to round ${target}`);
   }
 
   getRandomOffset() {
@@ -256,7 +292,15 @@ export class Game {
     }
 
     this.units.alive().forEach((u) => {
-      if (this.timeToAct(u.speed, u.tickerOffset)) u.ai();
+      if (u.action === UnitAction.walking && u.type === UnitType.patrolGuard) {
+        if (this.timeToAct(u.speed, u.tickerOffset)) {
+          u.ai();
+        } else {
+          u.handleFrames();
+        }
+      } else if (this.timeToAct(u.speed, u.tickerOffset)) {
+        u.ai();
+      }
     });
     this.units.castles.forEach((c) => {
       if (this.timeToAct(c.speed, c.tickerOffset)) c.ai();

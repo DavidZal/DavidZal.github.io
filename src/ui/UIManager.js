@@ -68,10 +68,10 @@ export class UIManager {
 
   bindGame(game) {
     this.game = game;
-    game.events.on('gold:changed', () => this._updateBuildUI());
+    game.events.on('gold:changed', () => this._updateBuildUI({ rebuildOptions: false }));
   }
 
-  _updateBuildUI() {
+  _updateBuildUI(options = {}) {
     const game = this.game;
     if (!game) return;
 
@@ -87,8 +87,23 @@ export class UIManager {
       timer.style.width = `${(game.phase.nextCount / max) * 100}%`;
     }
 
-    this._renderBuildOptions();
+    if (options.rebuildOptions !== false) {
+      this._renderBuildOptions();
+    } else {
+      this._syncBuildOptionStates();
+    }
     this._renderSummary();
+  }
+
+  _syncBuildOptionStates() {
+    const container = this._els.buildOptions;
+    if (!container || !this.game) return;
+    container.querySelectorAll('.build-option').forEach((btn, i) => {
+      const opt = BUILD_OPTIONS[i];
+      if (!opt) return;
+      btn.disabled = this.game.gold < opt.price && opt.price > 0;
+      btn.classList.toggle('selected', this.game.selectedBuildOption?.name === opt.name);
+    });
   }
 
   _renderBuildOptions() {
@@ -107,13 +122,14 @@ export class UIManager {
         'selected',
         this.game.selectedBuildOption?.name === opt.name
       );
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (opt.price <= this.game.gold || opt.price === 0) {
           this.game.selectedBuildOption =
             opt.type === 'unit'
               ? { ...opt, model: createUnit(opt.unitType, null) }
               : { ...opt };
-          this._renderBuildOptions();
+          this._syncBuildOptionStates();
         }
       });
       container.appendChild(btn);
@@ -178,7 +194,7 @@ export class UIManager {
         <div class="build-timer"><div id="timerBar" class="timer-bar"></div></div>
         <button id="beginRoundBtn" class="btn btn-action">Begin Round</button>
         <div id="buildOptions" class="build-options"></div>
-        <p class="hint">Keys: 1-7 select · Enter start round · WASD scroll · Esc cancel</p>
+        <p class="hint">Keys: 1-7 select · Enter start round · WASD scroll · Esc cancel · Cheats: gold10k, level##</p>
       </div>
       <div id="summary" class="overlay summary-panel hidden">
         <div id="summaryContent"></div>

@@ -1,14 +1,20 @@
 import { BUILD_OPTIONS, TargetType, UnitType } from '../config/constants.js';
 import { getGame } from '../core/GameContext.js';
 
-export function calcGold(game) {
+export function countVillagers(game) {
   const data = game.map.getNodesByType();
-
-  const villagers =
+  return (
     data.house.length +
     data.mill.length +
     data.castle.length +
-    game.horde.targets.filter((t) => t.type === TargetType.villager).length;
+    game.horde.targets.filter((t) => t.type === TargetType.villager).length
+  );
+}
+
+export function calcGold(game) {
+  const data = game.map.getNodesByType();
+
+  const villagers = countVillagers(game);
 
   const prev = game.summary ?? {};
   const getPrev = (key) => prev[key]?.current ?? 0;
