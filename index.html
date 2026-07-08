@@ -1,36 +1,14 @@
 ﻿<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>the horde</title>
-
-    <style>
-        body { text-align: center; }
-        canvas { border: solid; position: absolute; top: 0; left: 0; }
-        .game { width: 1700px; height: 900px; position: relative; }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="The Horde — defend your town against waves of enemies" />
+  <title>The Horde</title>
+  <link rel="icon" href="/favicon.ico" />
 </head>
 <body>
-    <div class="game">
-        <canvas id="canvas" width="1700" height="900"></canvas>
-        <canvas id="mapcanvas" width="1700" height="900"></canvas>
-    </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="town/town.js"></script>
-    <script src="town/landNode.js"></script>
-    <script src="unit/unit.js"></script>
-    <script src="unit/hordeling.js"></script>
-    <script src="unit/attackableTarget.js"></script>
-    <script src="unit/knight.js"></script>
-    <script src="unit/catapult.js"></script>
-    <script src="unit/archer.js"></script>
-    <script src="unit/fireball.js"></script>
-    <script src="unit/unitGroup.js"></script>
-    <script src="unit/shaman.js"></script>
-    <script src="unit/shamanFireball.js"></script>
-    <script src="astar.js"></script>
-    <script src="game.js"></script>
-    <script src="canvas.js"></script>
+  <div id="app"></div>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
