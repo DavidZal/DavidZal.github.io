@@ -503,7 +503,5 @@ export function drawCowImage(ctx, img, x, y, size) {
   const dx = x + (size - w) / 2;
   const dy = y + (size - h) / 2 + size * 0.06;
   drawUnitShadow(ctx, dx, dy, w, h);
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(dx + w * 0.12, dy + h * 0.1, w * 0.76, h * 0.72);
   ctx.drawImage(img, dx, dy, w, h);
 }

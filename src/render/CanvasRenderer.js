@@ -1,4 +1,4 @@
-import { LandType, Phase, TargetType, UnitAction } from '../config/constants.js';
+import { LandType, Phase, TargetType, UnitAction, UnitType } from '../config/constants.js';
 import {
   drawBuildingWithShadow,
   drawCowOnGrass,
@@ -14,6 +14,17 @@ import {
 
 const MAP_UI = { x: 1390, y: 590, width: 310, height: 310 };
 const HORDELING_COUNTER = { x: 1350, y: 50 };
+
+/** Units/villagers already get a health bar from _drawMob */
+const MOB_HEALTH_BAR_TYPES = new Set([
+  TargetType.villager,
+  UnitType.guard,
+  UnitType.patrolGuard,
+  UnitType.archer,
+  UnitType.knight,
+  UnitType.catapult,
+  UnitType.chauncey,
+]);
 
 const PROCEDURAL_TERRAIN = new Set([
   LandType.grass,
@@ -165,7 +176,7 @@ export class CanvasRenderer {
         const pts = this._getNodeXY(game, t.position.node);
         drawFightCloud(ctx, pts.x, pts.y, game.nodeSize, ticker);
       }
-      if (t.life !== undefined && t.start?.life) {
+      if (t.life !== undefined && t.start?.life && !MOB_HEALTH_BAR_TYPES.has(t.type)) {
         const pts = this._getNodeXY(game, t.position.node);
         drawHealthBar(ctx, pts.x + 10, pts.y + 10, game.nodeSize - 20, t.life, t.start.life);
       }
