@@ -3,6 +3,7 @@ import { UnitType } from '../config/constants.js';
 import { Archer } from './Archer.js';
 import { Catapult } from './Catapult.js';
 import { Fireball } from './Fireball.js';
+import { DragonHordeling } from './DragonHordeling.js';
 import { Hordeling } from './Hordeling.js';
 import { Knight } from './Knight.js';
 import { Shaman } from './Shaman.js';
@@ -78,5 +79,6 @@ export function createUnit(type, node, offset) {
 
 export function createHordeling(type, node) {
   if (type === UnitType.hordeling4) return new Shaman(node);
+  if (type === UnitType.hordelingDragon) return new DragonHordeling(type, node);
   return new Hordeling(type, node);
 }

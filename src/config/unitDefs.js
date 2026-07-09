@@ -97,6 +97,22 @@ export const UNIT_DEFS = Object.freeze({
       castSpell: { sy: 135 },
     },
   },
+  [UnitType.hordelingDragon]: {
+    sprite: 'hordeDragon.png',
+    sWidth: 80,
+    sHeight: 80,
+    speed: 12,
+    life: 3,
+    strength: 1,
+    range: 0.5,
+    isMobile: true,
+    animate: {
+      down: { sy: 0 },
+      land: { sy: 80 },
+      attack: { sy: 160 },
+      die: { sy: 160 },
+    },
+  },
   [UnitType.guard]: {
     sprite: 'guard.png',
     sWidth: 56,

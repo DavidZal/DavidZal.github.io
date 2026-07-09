@@ -1,4 +1,4 @@
-import { HORDE_TYPES, LandType, Phase, TargetType, UnitAction, UnitType } from '../config/constants.js';
+import { HORDE_TYPES, LandType, Phase, TargetType, UnitAction, UnitType, DRAGON_MAX_RATIO } from '../config/constants.js';
 import { getGame } from '../core/GameContext.js';
 import { astar } from '../pathfinding/astar.js';
 import { AttackableTarget } from '../units/AttackableTarget.js';
@@ -56,15 +56,40 @@ export class HordeManager {
       return false;
     });
 
+    const initialCounter = hCounter;
+    const dragonCap =
+      game.phase.round >= 10 ? Math.floor(initialCounter * DRAGON_MAX_RATIO) : 0;
+    let dragonsSpawned = 0;
+
     while (hCounter > 0) {
-      const possibles = HORDE_TYPES.filter(
-        (h) => h.rank <= hCounter && h.rank <= game.phase.round
-      );
+      let possibles = HORDE_TYPES.filter((h) => {
+        if (h.rank > hCounter || h.rank > game.phase.round) return false;
+        if (h.minRound && game.phase.round < h.minRound) return false;
+        if (h.type === UnitType.hordelingDragon && dragonsSpawned >= dragonCap) return false;
+        return true;
+      });
+
+      if (!possibles.length) break;
+
+      let pick;
+      const canSpawnDragon =
+        game.phase.round >= 10 &&
+        dragonsSpawned < dragonCap &&
+        possibles.some((h) => h.type === UnitType.hordelingDragon);
+
+      if (canSpawnDragon && Math.random() < DRAGON_MAX_RATIO) {
+        pick = possibles.find((h) => h.type === UnitType.hordelingDragon);
+        dragonsSpawned++;
+      } else {
+        const withoutDragon = possibles.filter((h) => h.type !== UnitType.hordelingDragon);
+        const pool = withoutDragon.length ? withoutDragon : possibles;
+        pick = pool[Math.floor(Math.random() * pool.length)];
+      }
+
       const startNode =
         allPossibleStartLocations[Math.floor(Math.random() * allPossibleStartLocations.length)];
-      const newHordeling = possibles[Math.floor(Math.random() * possibles.length)];
-      this.inactiveHordelings.push(createHordeling(newHordeling.type, startNode));
-      hCounter -= newHordeling.rank;
+      this.inactiveHordelings.push(createHordeling(pick.type, startNode));
+      hCounter -= pick.rank;
     }
 
     this.targets = game.map.data.house.map(

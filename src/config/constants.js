@@ -53,6 +53,7 @@ export const UnitType = Object.freeze({
   hordeling2: 'hordeling2',
   hordeling3: 'hordeling3',
   hordeling4: 'hordeling4',
+  hordelingDragon: 'hordelingDragon',
   guard: 'guard',
   patrolGuard: 'patrolGuard',
   archer: 'archer',
@@ -102,7 +103,10 @@ export const HORDE_TYPES = [
   { type: UnitType.hordeling2, rank: 2 },
   { type: UnitType.hordeling3, rank: 4 },
   { type: UnitType.hordeling4, rank: 6 },
+  { type: UnitType.hordelingDragon, rank: 2, minRound: 10 },
 ];
+
+export const DRAGON_MAX_RATIO = 0.02;
 
 export const IMAGE_PATHS = [
   'grass.jpg', 'water.jpg', 'field.jpg', 'house.png', 'mill.png', 'castle.png',
@@ -110,5 +114,5 @@ export const IMAGE_PATHS = [
   'rubbleHouse.png', 'rubbleField.jpg', 'cloud1.png', 'cow.png', 'catapult.png',
   'sprite.png', 'horde1.png', 'horde2.png', 'horde3.png', 'horde4.png',
   'guard.png', 'arrow.png', 'knight.png', 'archer.png', 'fireball.png',
-  'villager.png',
+  'villager.png', 'hordeDragon.png',
 ];

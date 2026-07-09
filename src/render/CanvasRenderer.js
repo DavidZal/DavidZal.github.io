@@ -262,8 +262,9 @@ export class CanvasRenderer {
     const pts = this._getNodeXY(game, mob.position.node);
     const w = mob.animate?.sWidth ?? 56;
     const h = mob.animate?.sHeight ?? 56;
+    const flyLift = mob.isFlying ? 36 : 0;
     mob.animate.canvasX = pts.x + mob.position.offset.x * game.offsetSize - w / 2;
-    mob.animate.canvasY = pts.y + mob.position.offset.y * game.offsetSize - h / 2;
+    mob.animate.canvasY = pts.y + mob.position.offset.y * game.offsetSize - h / 2 - flyLift;
 
     if (opts.ghost) {
       ctx.save();
@@ -271,8 +272,20 @@ export class CanvasRenderer {
       ctx.filter = 'grayscale(0.8)';
     }
 
-    drawUnitShadow(ctx, mob.animate.canvasX, mob.animate.canvasY, w, h);
-    this._drawCharacter(ctx, mob.animate, mob.animate.canvasX, mob.animate.canvasY);
+    const shadowY = mob.isFlying
+      ? pts.y + mob.position.offset.y * game.offsetSize - 8
+      : mob.animate.canvasY;
+    drawUnitShadow(ctx, mob.animate.canvasX, shadowY, w, mob.isFlying ? h * 0.45 : h);
+
+    if (mob.isFlying && mob.flyDirX > 0) {
+      ctx.save();
+      ctx.translate(mob.animate.canvasX + w, mob.animate.canvasY);
+      ctx.scale(-1, 1);
+      this._drawCharacter(ctx, mob.animate, 0, 0);
+      ctx.restore();
+    } else {
+      this._drawCharacter(ctx, mob.animate, mob.animate.canvasX, mob.animate.canvasY);
+    }
 
     if (mob.life !== undefined && mob.start?.life) {
       drawHealthBar(ctx, mob.animate.canvasX, mob.animate.canvasY, w, mob.life, mob.start.life);

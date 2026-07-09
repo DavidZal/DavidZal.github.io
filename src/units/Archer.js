@@ -8,6 +8,10 @@ export class Archer extends Unit {
     super(type, node, offset);
   }
 
+  getHordelingWithinRange() {
+    return super.getHordelingWithinRange(true);
+  }
+
   attack(target) {
     if (this.action !== UnitAction.attacking) {
       this.frame = 0;

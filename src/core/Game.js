@@ -271,6 +271,15 @@ export class Game {
       this.horde.hordelings.push(h);
     }
 
+    this.horde.hordelings.forEach((h) => {
+      if (h.landingPause > 0) {
+        h.landingPause--;
+        if (h.landingPause === 0 && h.houseTarget) {
+          h.isFlying = true;
+        }
+      }
+    });
+
     UnitGroup.update();
     this._updatePlayer();
 

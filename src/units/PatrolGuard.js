@@ -73,6 +73,7 @@ export class PatrolGuard extends Unit {
 
     for (const h of game.horde.hordelings) {
       if (h.action === UnitAction.dead || h.action === UnitAction.inactive) continue;
+      if (h.isFlying) continue;
       const dist = this.nodeDistanceTo(h.position.node);
       if (dist <= DETECTION_RANGE_TILES && dist < bestDist) {
         bestDist = dist;

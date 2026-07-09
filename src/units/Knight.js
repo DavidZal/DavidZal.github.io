@@ -19,6 +19,7 @@ export class Knight extends Unit {
           target = game.horde.hordelings.find(
             (h) =>
               h.action !== UnitAction.dead &&
+              !h.isFlying &&
               h.getOffsetDistanceFrom(this).dist < 3 * game.offsetSize
           );
           if (target) {
@@ -39,7 +40,9 @@ export class Knight extends Unit {
         } else {
           const nearByH = game.horde.hordelings.find(
             (h) =>
-              h.action !== UnitAction.dead && h.getOffsetDistanceFrom(this).dist < this.range
+              h.action !== UnitAction.dead &&
+              !h.isFlying &&
+              h.getOffsetDistanceFrom(this).dist < this.range
           );
           if (nearByH) {
             this.target = nearByH;

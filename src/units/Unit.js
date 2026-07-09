@@ -333,11 +333,11 @@ export class Unit {
     this.walk(Direction.down);
   }
 
-  getHordelingWithinRange() {
+  getHordelingWithinRange(includeFlying = false) {
     const game = getGame();
     return game.horde.hordelings.reduce(
       (current, h) => {
-        if (h.action !== UnitAction.dead) {
+        if (h.action !== UnitAction.dead && (includeFlying || !h.isFlying)) {
           const dist = h.getOffsetDistanceFrom(this).dist;
           if (dist < this.range && dist >= this.minRange && dist < current.dist) {
             return { h, dist };
